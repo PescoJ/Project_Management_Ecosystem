@@ -12,9 +12,14 @@ import dash_bootstrap_components as dbc
 # Setting the file path and refresh interval
 # Setting the file paths
 BASE_DIR = Path(__file__).resolve().parent
-DATA_FILE = BASE_DIR / "NYC_Synthetic_January_Tracking.xlsx"
-ASSETS_DIR = BASE_DIR / "assets"
-LOGO_FILE = "logo.PNG"
+REPO_ROOT = BASE_DIR.parent
+
+DATA_FILE = REPO_ROOT / "shared" / "data" / "NYC_Synthetic_January_Tracking.xlsx"
+ASSETS_DIR = REPO_ROOT / "shared" / "assets"
+LOGO_FILE = ASSETS_DIR / "logo.PNG"
+
+STREAMLIT_HOME_URL = "https://psychic-yodel-g4j4pvjpr6g6hvxpv-8501.app.github.dev/"
+DASH_APP_URL = "https://psychic-yodel-g4j4pvjpr6g6hvxpv-8050.app.github.dev/"
 
 df = pd.read_excel(DATA_FILE, sheet_name="January_Tracking")
 # Set refresh interval in milliseconds
@@ -23,7 +28,12 @@ refresh_interval = 30_000 #Seconds
 external_stylesheets = [dbc.themes.BOOTSTRAP,
                         "https://use.fontawesome.com/releases/v6.4.2/css/all.css",
 ]
-app = Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
+app = Dash(
+    __name__, 
+    external_stylesheets=external_stylesheets,
+    assets_folder=str(ASSETS_DIR), 
+    suppress_callback_exceptions=True,
+    )
 # Load data and show and error if file not found
 last_updated = "Unknown"
 if DATA_FILE.exists():
@@ -277,7 +287,7 @@ app.layout = dbc.Container(
             [
                 dbc.Col(
                     html.Img(
-                        src=app.get_asset_url(LOGO_FILE),
+                        src=app.get_asset_url("logo.PNG"),
                         style={"height": "70px", "width": "auto"},
                             ),
                     width="auto",
@@ -298,9 +308,19 @@ app.layout = dbc.Container(
                                 color="primary",
                                 className="border shadow-sm fw-semibold",
                                 children=[
-                                    dbc.DropdownMenuItem([html.I(className="fa-solid fa-house me-2"), "Home"], id="project-home"),
+                                    dbc.DropdownMenuItem(
+                                        [html.I(className="fa-solid fa-house me-2"), "Home"],
+                                          href=STREAMLIT_HOME_URL,
+                                          external_link=True,
+                                          target="_self",
+                                          ),
                                     dbc.DropdownMenuItem(divider=True),
-                                    dbc.DropdownMenuItem([html.I(className="fa-solid fa-1 me-2"), "Project 1"], id="project-one"),
+                                    dbc.DropdownMenuItem(
+                                        [html.I(className="fa-solid fa-1 me-2"), "Project 1"], 
+                                        href=DASH_APP_URL,
+                                        external_link=True,
+                                        target="_self",
+                                        ),
                                     dbc.DropdownMenuItem([html.I(className="fa-solid fa-2 me-2"), "Project 2"], id="project-two"),
                                     dbc.DropdownMenuItem([html.I(className="fa-solid fa-3 me-2"), "Project 3"], id="project-three"),
                                         ],
