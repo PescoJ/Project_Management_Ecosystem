@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 import altair as alt
+import os
 
 # Setting the file paths
 BASE_DIR = Path(__file__).resolve().parent
@@ -14,6 +15,7 @@ DATA_FILE = REPO_ROOT / "shared" / "data" / "Project-Management-Sample-Data.xlsx
 ASSETS_DIR = REPO_ROOT / "shared" / "assets"
 LOGO_FILE = ASSETS_DIR / "logo.PNG"
 
+DASH_URL =os.getenv("DASH_URL", "https://psychic-yodel-g4j4pvjpr6g6hvxpv-8050.app.github.dev/")
 # Auto-refresh setup
 refresh_interval = 30_000  # seconds
 st.components.v1.html(
@@ -59,8 +61,8 @@ button_one, button_two, button_three = st.columns([1, 1, 1], gap="small")
 with button_one:
     manage_projects = st.popover(label="Manage Projects")
     with manage_projects:
-        st.page_link("http://www.google.com", label="Home", icon="🏠")
-        st.page_link("http://www.google.com", label="Project 1", icon="1️⃣")
+        st.link_button("🏠 Home", "/")
+        st.link_button("1️⃣ Project 1", DASH_URL)
         st.page_link("http://www.google.com", label="Project 2", icon="2️⃣")
         st.page_link("http://www.google.com", label="Project 3", icon="3️⃣")
 with button_two:
