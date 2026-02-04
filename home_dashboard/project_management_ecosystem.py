@@ -8,9 +8,12 @@ import altair as alt
 
 # Setting the file paths
 BASE_DIR = Path(__file__).resolve().parent
-DATA_FILE = BASE_DIR / "Project-Management-Sample-Data.xlsx"
-ASSETS_DIR = BASE_DIR / "assets"
-LOGO_FILE = "logo.PNG"
+REPO_ROOT = BASE_DIR.parent
+
+DATA_FILE = REPO_ROOT / "shared" / "data" / "Project-Management-Sample-Data.xlsx"
+ASSETS_DIR = REPO_ROOT / "shared" / "assets"
+LOGO_FILE = ASSETS_DIR / "logo.PNG"
+
 # Auto-refresh setup
 refresh_interval = 30_000  # seconds
 st.components.v1.html(
@@ -31,7 +34,7 @@ if not DATA_FILE.exists():
      st.write("Files next to this script:", [p.name for p in BASE_DIR.iterdir()])
      st.stop()
 if LOGO_FILE.exists():
-     st.image("logo.PNG", width=100)
+     st.image(LOGO_FILE.read_bytes(), width=100)
 mtime = get_mtime(DATA_FILE)
 sheets = load_workbook(str(DATA_FILE), mtime)
 # Custom CSS to align buttons to the right
@@ -52,7 +55,7 @@ st.markdown(
 # Creating a banner for the page
 st.markdown('<div class="top-actions">', unsafe_allow_html=True)
 # Creating three buttons: Manage Projects, Manage Tasks, and Manage Users
-spacer, button_one, button_two, button_three = st.columns([7.5, 1, 1, 1], gap="small")
+button_one, button_two, button_three = st.columns([1, 1, 1], gap="small")
 with button_one:
     manage_projects = st.popover(label="Manage Projects")
     with manage_projects:
